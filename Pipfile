@@ -7,11 +7,11 @@ name = "pypi"
 django = "*"
 python-dotenv = "*"
 djangorestframework = "*"
-u = "*"
 channels = {extras = ["daphne"], version = "*"}
 djoser = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 
