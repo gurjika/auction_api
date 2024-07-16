@@ -12,6 +12,7 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
 django-debug-toolbar = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
