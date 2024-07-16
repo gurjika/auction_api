@@ -15,6 +15,7 @@ django-debug-toolbar = "*"
 mysqlclient = "*"
 celery = "*"
 redis = "*"
+pillow = "*"
 
 [dev-packages]
 
