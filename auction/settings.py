@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'core',
     'auction_api',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -189,3 +190,6 @@ INTERNAL_IPS = [
 AUTH_USER_MODEL = 'core.User'
 
 CELERY_BROKER_URL = 'redis://redis:6379/1'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

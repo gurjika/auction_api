@@ -16,6 +16,7 @@ mysqlclient = "*"
 celery = "*"
 redis = "*"
 pillow = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
