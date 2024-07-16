@@ -48,4 +48,11 @@ services:
   #   depends_on:
   #     - django
   #   restart: always
-
+  celery:
+    build: .
+    command: celery -A auction worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      

@@ -153,6 +153,16 @@ REST_FRAMEWORK = {
 }
 
 
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request:True,
+}
+
+
+
+
+
+
+
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
    'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
@@ -167,3 +177,5 @@ INTERNAL_IPS = [
 
 
 AUTH_USER_MODEL = 'core.User'
+
+CELERY_BROKER_URL = 'redis://redis:6379/1'
