@@ -19,7 +19,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class AuctionItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
     class Meta:
         model = AuctionItem
         fields = ['product', 'quantity']
