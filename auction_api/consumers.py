@@ -8,6 +8,8 @@ from .tasks import auction_timer_task
 from auction.celery  import app
 from channels.db import database_sync_to_async
 from datetime import timedelta
+from django.core.cache import cache
+
 
 
 class AuctionConsumer(AsyncWebsocketConsumer):
@@ -38,11 +40,14 @@ class AuctionConsumer(AsyncWebsocketConsumer):
         bid = text_data_json['bid']
 
 
-        if self.task_id:
-            app.control.revoke(self.task_id, terminate=True)
+        task_id = cache.get(self.room_group_name)
+        if task_id:
+            app.control.revoke(task_id, terminate=True)
 
-        self.task_id = auction_timer_task.apply_async(
-            args=[self.room_group_name, self.scope['user'].username, bid], countdown=15).id
+        new_task_id = auction_timer_task.apply_async(
+            args=[self.room_group_name, self.scope['user'].username, bid], countdown=60).id
+         
+        cache.set(self.room_group_name, new_task_id)
         
 
         await self.channel_layer.group_send(

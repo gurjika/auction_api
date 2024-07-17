@@ -18,6 +18,7 @@ redis = "*"
 pillow = "*"
 drf-yasg = "*"
 channels-redis = "*"
+django-redis = "*"
 
 [dev-packages]
 
