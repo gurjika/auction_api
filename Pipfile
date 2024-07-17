@@ -17,6 +17,7 @@ celery = "*"
 redis = "*"
 pillow = "*"
 drf-yasg = "*"
+channels-redis = "*"
 
 [dev-packages]
 

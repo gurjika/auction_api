@@ -21,18 +21,23 @@ class ProductSerializer(serializers.ModelSerializer):
 class AuctionItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuctionItem
-        fields = ['product', 'quantity']
+        fields = ['id', 'product', 'quantity']
 
 
 class AuctionSerializer(serializers.ModelSerializer):
+    total_product_price = serializers.SerializerMethodField()
     auction_item = AuctionItemSerializer(many=True, required=False)
     status_active = serializers.BooleanField(read_only=True)
-    starting_profile = ProfileSerializer(read_only=True)
+    starting_profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    
 
     class Meta:
         model = Auction
-        fields = ['status_active', 'starting_profile', 'auction_item']
+        fields = ['id', 'status_active', 'starting_profile', 'auction_item', 'total_product_price']
 
+
+    def get_total_product_price(self, obj):
+        return obj.total_product_price
 
 
     def create(self, validated_data):
