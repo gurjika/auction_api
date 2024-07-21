@@ -15,9 +15,12 @@ class AuctionViewSet(ModelViewSet):
     serializer_class = AuctionSerializer
 
     def get_serializer_context(self):
+        context = {'user': self.request.user}
         auction_pk = self.kwargs.get('pk')
-        last_bid = cache.get(f'auction_{auction_pk}_bid')
-        return {'user': self.request.user, 'last_bid': last_bid}
+        if auction_pk:
+            last_bid = cache.get(f'auction_{auction_pk}_bid')
+            context.update({'last_bid': last_bid})
+        return context
 
 
 

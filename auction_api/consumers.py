@@ -11,7 +11,6 @@ from datetime import timedelta
 from django.core.cache import cache
 
 
-
 class AuctionConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         
@@ -69,8 +68,7 @@ class AuctionConsumer(AsyncWebsocketConsumer):
                 }
             )
             
-        
-
+    
 
     async def update_bid(self, event):
 
@@ -83,6 +81,7 @@ class AuctionConsumer(AsyncWebsocketConsumer):
                 'protocol': 'UPDATE'
             }
         ))
+
 
     async def finish_auction(self, event):
 
