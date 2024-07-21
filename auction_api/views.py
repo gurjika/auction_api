@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from auction_api.models import Auction, Product
-from auction_api.serializers import AuctionSerializer, ProductSerializer
+from auction_api.models import Auction, Product, ProductImage
+from auction_api.serializers import AuctionSerializer, ImageSerializer, ProductSerializer
 from django.db.models import Sum, F
 from django.core.cache import cache
 
@@ -32,3 +32,13 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'user': self.request.user}
+
+
+class ImageViewSet(ModelViewSet):
+    serializer_class = ImageSerializer
+    
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+    
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}

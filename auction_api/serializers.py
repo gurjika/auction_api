@@ -13,6 +13,11 @@ class ImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = ['id', 'image']
 
+
+    def create(self, validated_data):
+        obj = ProductImage.objects.create(product_id=self.context['product_id'], **validated_data)
+        return obj
+
 class ProductSerializer(serializers.ModelSerializer):
     uploaded_images = serializers.ListField(
         child=serializers.ImageField(max_length=100000, allow_empty_file=False, use_url=False),

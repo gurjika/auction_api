@@ -20,6 +20,7 @@ drf-yasg = "*"
 channels-redis = "*"
 django-redis = "*"
 django-channels-jwt-auth-middleware = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
