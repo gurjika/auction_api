@@ -29,12 +29,17 @@ class AuctionSerializer(serializers.ModelSerializer):
     auction_item = AuctionItemSerializer(many=True, required=False)
     status_active = serializers.BooleanField(read_only=True)
     starting_profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    last_bid = serializers.SerializerMethodField()
     
 
     class Meta:
         model = Auction
-        fields = ['id', 'status_active', 'starting_profile', 'auction_item', 'total_product_price']
+        fields = ['id', 'status_active', 'starting_profile', 'auction_item', 'total_product_price', 'last_bid']
 
+    def get_last_bid(self, obj):
+        last_bid = self.context.get('last_bid')
+        return last_bid
+    
 
     def get_total_product_price(self, obj):
         return obj.total_product_price

@@ -15,9 +15,11 @@ from django.core.cache import cache
 class AuctionConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         
-        self.room_name = self.scope['url_route']['kwargs']['pk']
-        self.room_group_name = f'auction_{self.room_name}'
+        self.auction_pk = self.scope['url_route']['kwargs']['pk']
+        self.room_group_name = f'auction_{self.auction_pk}'
         self.task_id = None
+        auction = await database_sync_to_async(Auction.objects.get)(id=self.auction_pk)
+        self.starting_bid = auction.starting_bid
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -39,25 +41,35 @@ class AuctionConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         bid = text_data_json['bid']
 
-
         task_id = cache.get(self.room_group_name)
-        if task_id:
-            app.control.revoke(task_id, terminate=True)
+        prev_bid = cache.get(f'{self.room_group_name}_bid')
 
-        new_task_id = auction_timer_task.apply_async(
-            args=[self.room_group_name, self.scope['user'].username, bid], countdown=60).id
-         
-        cache.set(self.room_group_name, new_task_id)
+        if not prev_bid:
+            prev_bid = self.starting_bid
+
+        if float(prev_bid) < float(bid): 
         
+            if task_id:
+                app.control.revoke(task_id, terminate=True)
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'update_bid',
-                'bid': bid,
-                'username': self.scope['user'].username
-            }
-        )
+            new_task_id = auction_timer_task.apply_async(
+                args=[self.room_group_name, self.scope['user'].username, bid, self.auction_pk], countdown=60).id
+            
+            
+            cache.set(f'{self.room_group_name}_bid', bid)
+            cache.set(self.room_group_name, new_task_id)
+            
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'update_bid',
+                    'bid': bid,
+                    'username': self.scope['user'].username
+                }
+            )
+            
+        
 
 
     async def update_bid(self, event):
